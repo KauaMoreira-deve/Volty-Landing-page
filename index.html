@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Volty</title>
+<meta name="description" content="Volty: agenda, CRM e mensagens automáticas que trazem seus clientes de volta.">
+<link rel="icon" href="assets/coruja_frente.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Hanken+Grotesk:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="space" aria-hidden="true"></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="labels" id="labels" aria-hidden="true"></div>
+<div class="cur" aria-hidden="true"></div><div class="cur-dot" aria-hidden="true"></div>
+
+<header class="hud-top">
+  <a class="brand" href="#c0" aria-label="Volty, início"><img src="assets/logo_word.webp" alt="Volty"><span class="mono">Guia do produto</span></a>
+  <div class="counter mono" aria-hidden="true"><b id="cNum">00</b><i></i><span id="cName">Início</span></div>
+</header>
+<nav aria-label="Capítulos"><ol class="rail" id="rail"></ol></nav>
+
+<button class="owl" id="owl" type="button" aria-label="Coruja da Volty: ir para o próximo capítulo">
+  <span class="glow"></span>
+  <span class="body">
+    <img class="on" data-v="frente" src="assets/coruja_frente.webp" alt="">
+    <img data-v="direita" src="assets/coruja_direita.webp" alt="">
+    <img data-v="costas" src="assets/coruja_costas.webp" alt="">
+    <img data-v="esquerda" src="assets/coruja_esquerda.webp" alt="">
+  </span>
+</button>
+<div class="bubble hide" id="bubble" aria-live="polite"><small class="mono" id="bubbleK">00 · Início</small><span id="bubbleT">Oi! Eu fico de olho nos seus clientes. Role comigo pelo sistema.</span></div>
+
+<main>
+<section class="scene intro" id="c0" data-name="Início">
+  <div class="panel">
+    <span class="kicker mono">Volty · agenda, CRM e mensagens automáticas</span>
+    <h1 class="scr">Seus clientes já existem. A Volty traz eles de volta.</h1>
+    <p class="lead">A Volty não é só uma agenda. Ela guarda o histórico de cada cliente, percebe quem está sumindo e usa automações para gerar um novo agendamento.</p>
+    <div class="cue mono"><i></i>Role para atravessar o sistema</div>
+  </div>
+</section>
+
+<section class="scene" id="c1" data-name="Posicionamento">
+  <div class="panel">
+    <span class="ghostnum" aria-hidden="true">01</span>
+    <span class="kicker mono">Capítulo 01 · Posicionamento</span>
+    <h2 class="scr">Não venda uma agenda.</h2>
+    <p>Sistemas de agendamento já são comuns. Para fugir da guerra de preço, a proposta precisa estar ligada a um resultado financeiro claro para o cliente.</p>
+    <p class="quote">A Volty ajuda seu negócio a trazer clientes de volta automaticamente.</p>
+    <p>Em vez de destacar tecnologia, destaque resultados:</p>
+    <ul class="ticks"><li>Menos clientes esquecidos.</li><li>Mais reagendamentos.</li><li>Menos faltas por lembretes automáticos.</li><li>Histórico centralizado de cada cliente.</li><li>Campanhas automáticas de retorno.</li></ul>
+    <p>Comece por um único nicho de recorrência. Um nicho facilita mensagem, preço, demonstração e marketing.</p>
+    <div class="tagrow"><span>Barbearias</span><span>Clínicas de estética</span><span>Design de sobrancelha</span><span>Odontologia</span><span>Oficinas e detailing</span></div>
+  </div>
+</section>
+
+<section class="scene" id="c2" data-name="Produto">
+  <div class="panel">
+    <span class="ghostnum" aria-hidden="true">02</span>
+    <span class="kicker mono">Capítulo 02 · O fluxo do produto</span>
+    <h2 class="scr">Um ciclo que roda sem você.</h2>
+    <p>O sistema precisa funcionar com o mínimo possível de operação manual. Role devagar e acompanhe cada etapa acender na órbita.</p>
+    <ol class="steps" id="steps">
+      <li>Cliente agenda</li><li>Comparece</li><li>Entra no CRM</li><li>Sistema registra o histórico</li><li>Calcula o tempo sem retorno</li><li>Identifica a inatividade</li><li>Envia a mensagem</li><li>Cliente reagenda</li><li>Painel atribui o resultado à automação</li>
+    </ol>
+  </div>
+</section>
+
+<section class="scene" id="c3" data-name="Recuperação">
+  <div class="panel">
+    <span class="ghostnum" aria-hidden="true">03</span>
+    <span class="kicker mono">Capítulo 03 · Recuperação de clientes</span>
+    <h2 class="scr">Cada ponto é um cliente. Alguns estão se afastando.</h2>
+    <p>A Volty guarda atendimentos e valor gasto, calcula há quantos dias cada cliente não volta e dispara a mensagem de retorno. Role e veja quem volta para a órbita.</p>
+    <div class="readout">
+      <div><b>327</b><span>clientes sem voltar há 60+ dias</span></div>
+      <div class="hot"><b id="back">31</b><span>agendamentos recuperados pela automação</span></div>
+    </div>
+    <p><strong>Funcionalidades centrais:</strong> agenda online por serviço, profissional e horário; cadastro automático; histórico e valor gasto; lembrete antes do horário; mensagem após X dias sem retorno; campanhas para inativos; dashboard com clientes e receita recuperada.</p>
+    <p class="quote">R$ 4.280 em agendamentos recuperados este mês · 47 clientes recuperados · 183 mensagens automáticas enviadas<small>Dashboard que gera retenção · exemplo</small></p>
+  </div>
+</section>
+
+<section class="scene" id="c4" data-name="Planos">
+  <div class="panel">
+    <span class="ghostnum" aria-hidden="true">04</span>
+    <span class="kicker mono">Capítulo 04 · Planos e monetização</span>
+    <h2 class="scr">Receita que se repete todo mês.</h2>
+    <p>O objetivo é criar receita recorrente e fazer o cliente perceber valor suficiente para continuar assinando.</p>
+    <table class="plans">
+      <thead><tr><th>Plano</th><th>Preço</th><th>Inclui</th></tr></thead>
+      <tbody>
+        <tr><td>Inicial</td><td>R$ 49/mês</td><td>Agenda, cadastro de clientes e histórico básico</td></tr>
+        <tr><td>Pro</td><td>R$ 99/mês</td><td>Automações, lembretes e recuperação de clientes</td></tr>
+        <tr><td>Business</td><td>R$ 199/mês</td><td>IA, métricas, vários funcionários e recursos avançados</td></tr>
+      </tbody>
+    </table>
+    <p>As colunas ao lado mostram o MRR em escala real: de 100 clientes a R$ 99 até 5.000 clientes a R$ 120.</p>
+    <p class="note">Preços de exemplo. O ideal é validar a disposição a pagar com clientes reais. Se o sistema gera milhares de reais em retorno, existe espaço para cobrar mais.</p>
+  </div>
+</section>
+
+<section class="scene" id="c5" data-name="Escala">
+  <div class="panel">
+    <span class="ghostnum" aria-hidden="true">05</span>
+    <span class="kicker mono">Capítulo 05 · Escala por etapas</span>
+    <h2 class="scr">Cada anel, um objetivo diferente.</h2>
+    <div class="phases" role="group" aria-label="Fases de escala">
+      <button class="phase" type="button" data-i="0" aria-pressed="true"><b>0–50</b>Encontrar o product-market fit inicial</button>
+      <button class="phase" type="button" data-i="1" aria-pressed="false"><b>50–200</b>Padronizar e abrir o self-service</button>
+      <button class="phase" type="button" data-i="2" aria-pressed="false"><b>200–1.000</b>Abrir canais e medir tudo</button>
+      <button class="phase" type="button" data-i="3" aria-pressed="false"><b>1.000+</b>Previsibilidade e infraestrutura</button>
+    </div>
+    <div class="phase-detail" id="phaseDetail" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="scene" id="c6" data-name="Aquisição">
+  <div class="panel">
+    <span class="ghostnum" aria-hidden="true">06</span>
+    <span class="kicker mono">Capítulo 06 · Aquisição escalável</span>
+    <h2 class="scr">Depois que o produto funciona, o desafio é distribuição.</h2>
+    <div class="channels">
+      <div><b>Prospecção direta</b><span>Boa para os primeiros clientes. Procure negócios com agenda ativa e apresente a recuperação de clientes como benefício financeiro.</span></div>
+      <div><b>Parcerias</b><span>Gestores de tráfego, agências e consultores indicam vários negócios de uma vez. Exemplo: o cliente paga R$ 99/mês e o parceiro recebe R$ 20 a 30/mês enquanto a conta estiver ativa.</span></div>
+      <div><b>Indicação</b><span>“Indique um negócio e ganhe um mês grátis” reduz o custo de aquisição e acelera o crescimento orgânico.</span></div>
+      <div><b>Conteúdo e anúncios</b><span>Fale de dores específicas: clientes que somem, horários vazios, faltas, follow-up difícil e falta de histórico.</span></div>
+    </div>
+    <p class="quote">Seu negócio já possui clientes. A Volty ajuda você a lembrar quem está demorando para voltar e automatiza o contato para gerar novos agendamentos.<small>Mensagem de venda</small></p>
+  </div>
+</section>
+
+<section class="scene" id="c7" data-name="Métricas">
+  <div class="panel">
+    <span class="ghostnum" aria-hidden="true">07</span>
+    <span class="kicker mono">Capítulo 07 · Métricas</span>
+    <h2 class="scr">Faturamento sozinho não mostra a saúde do negócio.</h2>
+    <dl class="defs">
+      <dt>MRR</dt><dd>Receita recorrente mensal.</dd>
+      <dt>Churn</dt><dd>Percentual de clientes que cancelam no período.</dd>
+      <dt>CAC</dt><dd>Quanto custa adquirir um novo cliente.</dd>
+      <dt>LTV</dt><dd>Quanto um cliente gera durante todo o relacionamento.</dd>
+      <dt>Payback</dt><dd>Meses para recuperar o CAC.</dd>
+      <dt>Ativação</dt><dd>Novos clientes que chegam ao primeiro resultado real.</dd>
+      <dt>Retenção</dt><dd>Quem continua usando após 1, 3, 6 e 12 meses.</dd>
+    </dl>
+    <div class="churn">
+      <label for="churn">Churn mensal da nuvem esquerda <output id="churnOut" for="churn">10%</output></label>
+      <input id="churn" type="range" min="1" max="20" step="1" value="10">
+      <p>Com 1.000 clientes, você perde cerca de <b id="churnN">100</b> por mês. A nuvem da direita fica em 2%, cerca de 20.</p>
+    </div>
+    <p><strong>Para reduzir churn:</strong> mostre o resultado financeiro no dashboard, avise quando uma automação gerar reagendamento, facilite a configuração inicial, mande relatórios mensais simples e aja antes que uma conta parada cancele.</p>
+  </div>
+</section>
+
+<section class="scene" id="c8" data-name="Roadmap">
+  <div class="panel">
+    <span class="ghostnum" aria-hidden="true">08</span>
+    <span class="kicker mono">Capítulo 08 · Roadmap e estratégia</span>
+    <h2 class="scr">Não construa tudo de uma vez.</h2>
+    <div class="path"><span>Serviço</span><i>→</i><span>Validação</span><i>→</i><span>Recorrência</span><i>→</i><span>Escala</span></div>
+    <div class="cols">
+      <div><h3>MVP essencial</h3><ul><li>Login e cadastro da empresa</li><li>Serviços e profissionais</li><li>Agenda e página de agendamento</li><li>Cadastro automático do cliente</li><li>Histórico de agendamentos</li><li>Lembretes automáticos</li><li>Regra de inativo após X dias</li><li>Mensagem de retorno</li><li>Dashboard básico</li><li>Assinatura recorrente</li></ul></div>
+      <div><h3>Depois da validação</h3><ul><li>Integração oficial com WhatsApp</li><li>IA para o melhor momento e mensagem</li><li>Segmentação por frequência e ticket</li><li>Várias unidades e funcionários</li><li>Programa de indicação</li><li>Google Calendar, pagamentos e CRM</li></ul></div>
+    </div>
+    <p>Primeiro consiga 5 a 10 empresas reais. Prove que o sistema recupera clientes. Ajuste o produto. Chegue a 50 clientes por vendas manuais. Padronize o onboarding. Abra indicação e parceiros. Só então acelere anúncios.</p>
+  </div>
+</section>
+
+<section class="scene outro" id="c9" data-name="Volty">
+  <div class="panel">
+    <span class="kicker mono">Fim da viagem</span>
+    <h2 class="scr">Quando a empresa vê quanto dinheiro voltou, a Volty deixa de parecer um custo.</h2>
+    <p>O melhor diferencial deste produto é transformar dados de agendamento em ações automáticas que trazem clientes de volta.</p>
+    <div class="cue mono" style="justify-content:center"><a href="#c0">Voltar ao início</a></div>
+  </div>
+</section>
+</main>
+<footer><span>Volty · guia estratégico. Valores e cenários são exemplos para planejamento e devem ser validados com clientes, custos de infraestrutura, APIs de mensagem, impostos e condições comerciais reais.</span><span>© 2026 Volty</span></footer>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/lenis.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
