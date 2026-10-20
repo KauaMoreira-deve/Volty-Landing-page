@@ -25,7 +25,7 @@
 </header>
 <nav aria-label="Capítulos"><ol class="rail" id="rail"></ol></nav>
 
-<button class="owl" id="owl" type="button" aria-label="Coruja da Volty: ir para o próximo capítulo">
+<button class="owl" id="owl" type="button" aria-label="Coruja da Volty: tirar dúvidas" aria-controls="ask">
   <span class="glow"></span>
   <span class="body">
     <img class="on" data-v="frente" src="assets/coruja_frente.webp" alt="">
@@ -35,6 +35,7 @@
   </span>
 </button>
 <div class="bubble hide" id="bubble" aria-live="polite"><small class="mono" id="bubbleK">00 · Início</small><span id="bubbleT">Oi! Eu fico de olho nos seus clientes. Role comigo pelo sistema.</span></div>
+<div class="ask" id="ask" role="dialog" aria-label="Dúvidas com a coruja da Volty" aria-live="polite" hidden><button class="ask-x" type="button" aria-label="Fechar">×</button><div id="askBody"></div></div>
 
 <main>
 <section class="scene intro" id="c0" data-name="Início">
@@ -42,6 +43,7 @@
     <span class="kicker mono">Volty · agenda, CRM e mensagens automáticas</span>
     <h1 class="scr">Seus clientes já existem. A Volty traz eles de volta.</h1>
     <p class="lead">A Volty não é só uma agenda. Ela guarda o histórico de cada cliente, percebe quem está sumindo e usa automações para gerar um novo agendamento.</p>
+    <p class="legend"><i aria-hidden="true"></i><span><small>O que os pontos mostram</small>Cada ponto de luz é um cliente. A cada capítulo eles se reorganizam para mostrar uma parte do sistema.</span></p>
     <div class="cue mono"><i></i>Role para atravessar o sistema</div>
   </div>
 </section>
@@ -51,6 +53,7 @@
     <span class="ghostnum" aria-hidden="true">01</span>
     <span class="kicker mono">Capítulo 01 · Posicionamento</span>
     <h2 class="scr">Não venda uma agenda.</h2>
+    <p class="legend"><i aria-hidden="true"></i><span><small>O que os pontos mostram</small>Uma agenda do mês. Cada quadrado é um dia, os mais acesos estão cheios, e os pontos soltos são clientes que se perderam dela.</span></p>
     <p>Sistemas de agendamento já são comuns. Para fugir da guerra de preço, a proposta precisa estar ligada a um resultado financeiro claro para o cliente.</p>
     <p class="quote">A Volty ajuda seu negócio a trazer clientes de volta automaticamente.</p>
     <p>Em vez de destacar tecnologia, destaque resultados:</p>
@@ -65,7 +68,8 @@
     <span class="ghostnum" aria-hidden="true">02</span>
     <span class="kicker mono">Capítulo 02 · O fluxo do produto</span>
     <h2 class="scr">Um ciclo que roda sem você.</h2>
-    <p>O sistema precisa funcionar com o mínimo possível de operação manual. Role devagar e acompanhe cada etapa acender na órbita.</p>
+    <p class="legend"><i aria-hidden="true"></i><span><small>O que os pontos mostram</small>A órbita. Cada um dos 9 aglomerados é uma etapa do ciclo e acende na mesma ordem da lista abaixo.</span></p>
+    <p>O sistema precisa funcionar com o mínimo possível de operação manual. Role devagar e acompanhe <mark class="px">cada etapa acender na órbita</mark>.</p>
     <ol class="steps" id="steps">
       <li>Cliente agenda</li><li>Comparece</li><li>Entra no CRM</li><li>Sistema registra o histórico</li><li>Calcula o tempo sem retorno</li><li>Identifica a inatividade</li><li>Envia a mensagem</li><li>Cliente reagenda</li><li>Painel atribui o resultado à automação</li>
     </ol>
@@ -77,7 +81,8 @@
     <span class="ghostnum" aria-hidden="true">03</span>
     <span class="kicker mono">Capítulo 03 · Recuperação de clientes</span>
     <h2 class="scr">Cada ponto é um cliente. Alguns estão se afastando.</h2>
-    <p>A Volty guarda atendimentos e valor gasto, calcula há quantos dias cada cliente não volta e dispara a mensagem de retorno. Role e veja quem volta para a órbita.</p>
+    <p class="legend"><i aria-hidden="true"></i><span><small>O que os pontos mostram</small>A base de clientes. No centro estão os ativos; os pontos apagados lá fora sumiram há 60+ dias, e os que brilham estão voltando.</span></p>
+    <p>A Volty guarda atendimentos e valor gasto, calcula há quantos dias cada cliente não volta e dispara a mensagem de retorno. Role e veja <mark class="px">quem volta para a órbita</mark>.</p>
     <div class="readout">
       <div><b>327</b><span>clientes sem voltar há 60+ dias</span></div>
       <div class="hot"><b id="back">31</b><span>agendamentos recuperados pela automação</span></div>
@@ -92,6 +97,7 @@
     <span class="ghostnum" aria-hidden="true">04</span>
     <span class="kicker mono">Capítulo 04 · Planos e monetização</span>
     <h2 class="scr">Receita que se repete todo mês.</h2>
+    <p class="legend"><i aria-hidden="true"></i><span><small>O que os pontos mostram</small>Quatro colunas de receita mensal, na mesma escala. Quanto mais clientes e maior o preço, mais alta a coluna.</span></p>
     <p>O objetivo é criar receita recorrente e fazer o cliente perceber valor suficiente para continuar assinando.</p>
     <table class="plans">
       <thead><tr><th>Plano</th><th>Preço</th><th>Inclui</th></tr></thead>
@@ -101,7 +107,7 @@
         <tr><td>Business</td><td>R$ 199/mês</td><td>IA, métricas, vários funcionários e recursos avançados</td></tr>
       </tbody>
     </table>
-    <p>As colunas ao lado mostram o MRR em escala real: de 100 clientes a R$ 99 até 5.000 clientes a R$ 120.</p>
+    <p><mark class="px">As colunas ao lado</mark> mostram o MRR em escala real: de 100 clientes a R$ 99 até 5.000 clientes a R$ 120.</p>
     <p class="note">Preços de exemplo. O ideal é validar a disposição a pagar com clientes reais. Se o sistema gera milhares de reais em retorno, existe espaço para cobrar mais.</p>
   </div>
 </section>
@@ -111,6 +117,7 @@
     <span class="ghostnum" aria-hidden="true">05</span>
     <span class="kicker mono">Capítulo 05 · Escala por etapas</span>
     <h2 class="scr">Cada anel, um objetivo diferente.</h2>
+    <p class="legend"><i aria-hidden="true"></i><span><small>O que os pontos mostram</small>Quatro anéis, um por fase de crescimento, do menor (0–50) ao maior (1.000+). O anel aceso é a fase selecionada.</span></p>
     <div class="phases" role="group" aria-label="Fases de escala">
       <button class="phase" type="button" data-i="0" aria-pressed="true"><b>0–50</b>Encontrar o product-market fit inicial</button>
       <button class="phase" type="button" data-i="1" aria-pressed="false"><b>50–200</b>Padronizar e abrir o self-service</button>
@@ -126,6 +133,7 @@
     <span class="ghostnum" aria-hidden="true">06</span>
     <span class="kicker mono">Capítulo 06 · Aquisição escalável</span>
     <h2 class="scr">Depois que o produto funciona, o desafio é distribuição.</h2>
+    <p class="legend"><i aria-hidden="true"></i><span><small>O que os pontos mostram</small>O núcleo é a Volty. Os quatro aglomerados em órbita são os canais de aquisição listados abaixo.</span></p>
     <div class="channels">
       <div><b>Prospecção direta</b><span>Boa para os primeiros clientes. Procure negócios com agenda ativa e apresente a recuperação de clientes como benefício financeiro.</span></div>
       <div><b>Parcerias</b><span>Gestores de tráfego, agências e consultores indicam vários negócios de uma vez. Exemplo: o cliente paga R$ 99/mês e o parceiro recebe R$ 20 a 30/mês enquanto a conta estiver ativa.</span></div>
@@ -141,6 +149,7 @@
     <span class="ghostnum" aria-hidden="true">07</span>
     <span class="kicker mono">Capítulo 07 · Métricas</span>
     <h2 class="scr">Faturamento sozinho não mostra a saúde do negócio.</h2>
+    <p class="legend"><i aria-hidden="true"></i><span><small>O que os pontos mostram</small>Duas bases de clientes. Os pontos que escapam são cancelamentos: a nuvem da esquerda segue o controle de churn abaixo, a da direita fica em 2%.</span></p>
     <dl class="defs">
       <dt>MRR</dt><dd>Receita recorrente mensal.</dd>
       <dt>Churn</dt><dd>Percentual de clientes que cancelam no período.</dd>
@@ -151,9 +160,9 @@
       <dt>Retenção</dt><dd>Quem continua usando após 1, 3, 6 e 12 meses.</dd>
     </dl>
     <div class="churn">
-      <label for="churn">Churn mensal da nuvem esquerda <output id="churnOut" for="churn">10%</output></label>
+      <label for="churn">Churn mensal da <mark class="px">nuvem esquerda</mark> <output id="churnOut" for="churn">10%</output></label>
       <input id="churn" type="range" min="1" max="20" step="1" value="10">
-      <p>Com 1.000 clientes, você perde cerca de <b id="churnN">100</b> por mês. A nuvem da direita fica em 2%, cerca de 20.</p>
+      <p>Com 1.000 clientes, você perde cerca de <b id="churnN">100</b> por mês. <mark class="px">A nuvem da direita</mark> fica em 2%, cerca de 20.</p>
     </div>
     <p><strong>Para reduzir churn:</strong> mostre o resultado financeiro no dashboard, avise quando uma automação gerar reagendamento, facilite a configuração inicial, mande relatórios mensais simples e aja antes que uma conta parada cancele.</p>
   </div>
@@ -164,6 +173,7 @@
     <span class="ghostnum" aria-hidden="true">08</span>
     <span class="kicker mono">Capítulo 08 · Roadmap e estratégia</span>
     <h2 class="scr">Não construa tudo de uma vez.</h2>
+    <p class="legend"><i aria-hidden="true"></i><span><small>O que os pontos mostram</small>Uma estrada com quatro marcos, do serviço à escala. Ela alarga conforme o negócio cresce.</span></p>
     <div class="path"><span>Serviço</span><i>→</i><span>Validação</span><i>→</i><span>Recorrência</span><i>→</i><span>Escala</span></div>
     <div class="cols">
       <div><h3>MVP essencial</h3><ul><li>Login e cadastro da empresa</li><li>Serviços e profissionais</li><li>Agenda e página de agendamento</li><li>Cadastro automático do cliente</li><li>Histórico de agendamentos</li><li>Lembretes automáticos</li><li>Regra de inativo após X dias</li><li>Mensagem de retorno</li><li>Dashboard básico</li><li>Assinatura recorrente</li></ul></div>
@@ -178,6 +188,7 @@
     <span class="kicker mono">Fim da viagem</span>
     <h2 class="scr">Quando a empresa vê quanto dinheiro voltou, a Volty deixa de parecer um custo.</h2>
     <p>O melhor diferencial deste produto é transformar dados de agendamento em ações automáticas que trazem clientes de volta.</p>
+    <p class="legend"><i aria-hidden="true"></i><span><small>O que os pontos mostram</small>Todos os clientes de volta, girando em torno do seu negócio.</span></p>
     <div class="cue mono" style="justify-content:center"><a href="#c0">Voltar ao início</a></div>
   </div>
 </section>
@@ -185,6 +196,7 @@
 <footer><span>Volty · guia estratégico. Valores e cenários são exemplos para planejamento e devem ser validados com clientes, custos de infraestrutura, APIs de mensagem, impostos e condições comerciais reais.</span><span>© 2026 Volty</span></footer>
 
 <script src="vendor/three.min.js"></script>
+<script src="vendor/GLTFLoader.js"></script>
 <script src="vendor/lenis.min.js"></script>
 <script src="js/main.js"></script>
 </body>

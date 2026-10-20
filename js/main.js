@@ -35,14 +35,163 @@
     }
     else { $('.cur').hidden = true; $('.cur-dot').hidden = true }
 
-    /* ---------------- owl companion ---------------- */
-    const owl = $('#owl'), owlImgs = [...owl.querySelectorAll('img')], bubble = $('#bubble'), bT = $('#bubbleT'), bK = $('#bubbleK');
+    /* ---------------- owl companion: walks in, stands in the hero, strolls, can be dragged, and answers questions ---------------- */
+    const owl = $('#owl'), owlImgs = [...owl.querySelectorAll('img')], bubble = $('#bubble'), bT = $('#bubbleT'), bK = $('#bubbleK'), ask = $('#ask'), askBody = $('#askBody');
     const tips = ['Oi! Eu fico de olho nos seus clientes. Role comigo pelo sistema.', 'Agenda todo mundo tem. A gente vende cliente de volta.', 'Cada ponto que acende é uma etapa que roda sozinha.', 'Tá vendo os pontos se afastando? Eu chamo eles de volta.', 'Se a Volty devolve milhares de reais, dá para cobrar mais.', 'Comece com 5 a 10 empresas usando de verdade.', 'Um parceiro pode trazer dezenas de negócios de uma vez.', 'Mexa no churn e veja quanta gente escapa da nuvem.', 'Primeiro prove que recupera clientes. Depois acelere.', 'Até a próxima visita!'];
+    // c: chapter that answers it; home: chapters where it is offered first
+    const FAQ = [
+        { q: 'O que é a Volty?', a: 'Uma agenda com CRM e mensagens automáticas. Ela guarda o histórico de cada cliente, percebe quem está sumindo e manda uma mensagem para gerar um novo agendamento.', c: 2, home: [0, 2] },
+        { q: 'Para quem ela é?', a: 'Para negócios em que o cliente volta com frequência: barbearias, clínicas de estética, design de sobrancelha, odontologia, oficinas e detailing. O ideal é começar por um nicho só.', c: 1, home: [0, 1] },
+        { q: 'Como ela traz clientes de volta?', a: 'Ela calcula há quantos dias cada cliente não volta. Passado o prazo que você define, dispara uma mensagem de retorno, e o painel mostra quantos reagendaram.', c: 3, home: [0, 3] },
+        { q: 'Quanto custa?', a: 'Os planos de exemplo vão de R$ 49 a R$ 199 por mês. O Pro, de R$ 99, já inclui automações, lembretes e recuperação de clientes.', c: 4, home: [4] },
+        { q: 'Como o negócio cresce?', a: 'Em quatro fases: achar o encaixe com 0 a 50 clientes, padronizar até 200, abrir canais até 1.000 e depois ganhar previsibilidade.', c: 5, home: [5] },
+        { q: 'Como conseguir clientes?', a: 'Prospecção direta no começo, depois parcerias com agências e gestores de tráfego, programa de indicação e conteúdo sobre dores específicas.', c: 6, home: [6] },
+        { q: 'Como evitar cancelamentos?', a: 'Mostre o dinheiro recuperado no painel, avise quando uma automação gerar reagendamento e aja antes que uma conta parada cancele.', c: 7, home: [7] },
+        { q: 'Por onde eu começo?', a: 'Coloque 5 a 10 empresas reais usando, prove que o sistema recupera clientes e chegue a 50 clientes por venda manual antes de acelerar anúncios.', c: 8, home: [8, 9] }
+    ];
     let owlView = 'frente', lastScroll = scrollY, idle = 0, cur = -1;
     const setOwl = v => { if (v === owlView) return; owlView = v; owlImgs.forEach(i => i.classList.toggle('on', i.dataset.v === v)) };
-    owl.addEventListener('click', () => go(cur + 1 >= S ? 0 : cur + 1));
-    let bt = 0; const say = () => { bubble.classList.remove('hide'); clearTimeout(bt); bt = setTimeout(() => bubble.classList.add('hide'), 5200) };
-    owl.addEventListener('pointerenter', say); owl.addEventListener('focus', say);
+
+    // speech bubble and question panel float above the owl's head; their sizes are cached so placing them never forces layout
+    let bw = 0, bh = 0, aw = 0, ah = 0, bt = 0;
+    const sizeBubble = () => { bw = bubble.offsetWidth; bh = bubble.offsetHeight };
+    const say = (text, ms = 5200) => { if (!ask.hidden) return; if (text) { bT.textContent = text; sizeBubble() } bubble.classList.remove('hide'); clearTimeout(bt); bt = setTimeout(() => bubble.classList.add('hide'), ms) };
+    const chap = () => Math.max(cur, 0), chapLabel = () => String(chap()).padStart(2, '0') + ' · ' + scenes[chap()].dataset.name;
+    function renderList(title) {
+        const c = chap(), qs = FAQ.map((f, k) => [f, k]).sort((A, B) => B[0].home.includes(c) - A[0].home.includes(c)).slice(0, 4);
+        askBody.innerHTML = `<small>${chapLabel()}</small><p class="ask-t">${title}</p><div class="ask-qs">${qs.map(([f, k]) => `<button type="button" data-q="${k}">${f.q}</button>`).join('')}</div>`
+            + `<div class="ask-foot"><button type="button" data-act="no">Não, vou explorar</button>${c < S - 1 ? '<button type="button" class="pri" data-act="next">Próximo capítulo →</button>' : ''}</div>`;
+        ah = ask.offsetHeight
+    }
+    function renderAnswer(k) {
+        const f = FAQ[k];
+        askBody.innerHTML = `<small>Dúvida</small><p class="ask-t">${f.q}</p><p class="ask-a">${f.a}</p><div class="ask-foot"><button type="button" data-act="back">← Outra dúvida</button>${f.c !== cur ? `<button type="button" class="pri" data-act="go" data-c="${f.c}">Me leva até lá →</button>` : ''}</div>`;
+        ah = ask.offsetHeight
+    }
+    function openAsk(title = 'Está com alguma dúvida?', focus = false) {
+        bubble.classList.add('hide'); ask.hidden = false; aw = ask.offsetWidth; renderList(title); hopOwl(.7);
+        if (focus) { const b = ask.querySelector('.ask-qs button'); if (b) b.focus({ preventScroll: true }) }
+    }
+    const closeAsk = () => { ask.hidden = true };
+    ask.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        if (b.classList.contains('ask-x')) return closeAsk();
+        if (b.dataset.q) { renderAnswer(+b.dataset.q); hopOwl(.5); return }
+        const act = b.dataset.act;
+        if (act === 'back') renderList('Qual a sua dúvida?');
+        else if (act === 'no') { closeAsk(); say('Beleza! Se surgir alguma dúvida, é só clicar em mim.') }
+        else if (act === 'next') { closeAsk(); go(chap() + 1) }
+        else if (act === 'go') { closeAsk(); go(+b.dataset.c) }
+    });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !ask.hidden) { closeAsk(); owl.focus({ preventScroll: true }) } });
+    owl.addEventListener('pointerenter', () => say()); owl.addEventListener('focus', () => say());
+
+    // motion state: x/y is the point between the owl's feet, in viewport pixels
+    const HERO_S = 1.45;
+    const OW = { x: innerWidth + 160, y: innerHeight - 26, s: HERO_S, anchor: 'auto', spot: null, standing: null, walking: false, dir: -1, phase: 0, hop: 0, drag: null, vx: 0, startAt: performance.now() + 900 };
+    const hopOwl = (p = 1) => { if (!reduce) OW.hop = Math.max(OW.hop, p) };
+    let ow = 150, oh = 170, heroX = 0, heroY = 0, greeted = false, idleT = 0;
+    const strolled = new Set(), asked = new Set();
+    function measureOwl() {
+        ow = owl.offsetWidth; oh = owl.offsetHeight; sizeBubble(); if (!ask.hidden) { aw = ask.offsetWidth; ah = ask.offsetHeight }
+        // hero spot: just right of the intro text, feet a little below the scroll cue (document coordinates)
+        const pr = $('.intro .panel').getBoundingClientRect(), cr = $('.intro .cue').getBoundingClientRect();
+        heroX = Math.min(innerWidth - 24 - ow * HERO_S / 2, pr.right + 40 + ow * HERO_S / 2); heroY = Math.min(cr.bottom + scrollY + 30, innerHeight - 40);
+        // before the entrance walk, wait offstage at the height of the spot it will walk to
+        if (!OW.standing && !OW.walking && performance.now() < OW.startAt) OW.y = scrollY < innerHeight * .35 && !narrow() ? heroY - scrollY : innerHeight - 26
+    }
+    const narrow = () => innerWidth < 760;
+    const dockPos = () => [innerWidth - (narrow() ? 16 : 56) - ow / 2, innerHeight - 26];
+    function onArrive(key) {
+        hopOwl(.6);
+        if (key === 'hero' && !greeted) {
+            greeted = true; say('Oi! Eu sou a coruja da Volty e vou te acompanhar pelo guia.', 3600);
+            setTimeout(() => { if (cur <= 0 && ask.hidden && !OW.drag) { asked.add(0); openAsk('Antes de começar: está com alguma dúvida?') } }, 3800)
+        }
+        if (key === 'spot' && OW.stroll) { OW.stroll = false; const c = chap(); if (!asked.has(c) && ask.hidden) { asked.add(c); say(`Ficou com alguma dúvida sobre ${scenes[c].dataset.name.toLowerCase()}? É só clicar em mim.`, 7000) } }
+    }
+    function onChapter(a) {
+        idleT = 0; if (OW.anchor === 'spot') { OW.anchor = 'auto'; OW.stroll = false }
+        bT.textContent = tips[a]; bK.textContent = String(a).padStart(2, '0') + ' · ' + scenes[a].dataset.name; sizeBubble();
+        if (scrollY > innerHeight * .5 && !narrow()) say()
+    }
+
+    // drag and drop: pick the owl up, carry it anywhere, it stays where you leave it
+    let downAt = null, dragged = false;
+    owl.addEventListener('pointerdown', e => { downAt = [e.clientX, e.clientY]; dragged = false; owl.setPointerCapture(e.pointerId) });
+    owl.addEventListener('pointermove', e => {
+        if (!downAt) return;
+        if (!OW.drag && Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 6) { OW.drag = { ox: OW.x - e.clientX, oy: OW.y - e.clientY }; dragged = true; closeAsk(); bubble.classList.add('hide') }
+        if (OW.drag) { const nx = e.clientX + OW.drag.ox; OW.vx += ((nx - OW.x) * 60 - OW.vx) * .3; OW.x = nx; OW.y = e.clientY + OW.drag.oy }
+    });
+    const drop = () => {
+        downAt = null; if (!OW.drag) return; OW.drag = null; OW.vx = 0;
+        OW.x = clamp(OW.x, ow / 2 + 8, innerWidth - ow / 2 - 8); OW.y = clamp(OW.y, oh * OW.s + 8, innerHeight - 8);
+        OW.anchor = 'spot'; OW.spot = [OW.x, OW.y]; OW.standing = 'spot'; OW.stroll = false; hopOwl(.8); say('Gostei daqui!', 2200)
+    };
+    owl.addEventListener('pointerup', drop); owl.addEventListener('pointercancel', drop);
+    owl.addEventListener('click', e => { if (dragged) { dragged = false; e.preventDefault(); return } if (ask.hidden) openAsk('Está com alguma dúvida?', e.detail === 0); else closeAsk() });
+
+    function owlStep(dt, sdy) {
+        // where the owl wants to be
+        let key, tx, ty, ts = 1;
+        if (OW.anchor === 'spot' && OW.spot) { key = 'spot'; [tx, ty] = OW.spot }
+        else if (scrollY < innerHeight * .35 && !narrow()) { key = 'hero'; tx = heroX; ty = heroY - scrollY; ts = HERO_S }
+        else { key = 'dock'; [tx, ty] = dockPos() }
+        OW.s += (ts - OW.s) * (1 - Math.exp(-dt * 3));
+        if (OW.drag) OW.walking = false;
+        else if (reduce) { OW.x = tx; OW.y = ty; OW.walking = false; if (OW.standing !== key) { OW.standing = key; onArrive(key) } }
+        else if (OW.standing === key) { OW.x = tx; OW.y = ty; OW.walking = false } // standing still: stays attached to its spot (the hero spot scrolls with the page)
+        else if (performance.now() > OW.startAt) {
+            OW.standing = null; const dx = tx - OW.x, dy = ty - OW.y, d = Math.hypot(dx, dy);
+            if (d < 2) { OW.x = tx; OW.y = ty; OW.walking = false; OW.standing = key; onArrive(key) }
+            else { const step = Math.min(d, (230 + Math.max(0, d - 280) * .9) * dt); OW.x += dx / d * step; OW.y += dy / d * step; OW.phase += step / 30; if (Math.abs(dx) > 3) OW.dir = Math.sign(dx); OW.walking = true }
+        }
+        OW.hop = Math.max(0, OW.hop - dt * 1.7);
+        // idle: after a while on a chapter the owl strolls along the bottom of the screen, then asks if anything is unclear
+        idleT = Math.abs(sdy) > .5 || OW.drag ? 0 : idleT + dt;
+        const c = chap();
+        if (!reduce && !narrow() && c > 0 && idleT > 9 && OW.standing === 'dock' && ask.hidden && !strolled.has(c)) {
+            strolled.add(c); OW.anchor = 'spot'; OW.stroll = true; OW.spot = [innerWidth * (.56 + Math.random() * .26), innerHeight - 26]
+        }
+        owl.style.transform = `translate(${(OW.x - ow / 2).toFixed(1)}px,${(OW.y - oh).toFixed(1)}px) scale(${OW.s.toFixed(3)})`;
+        const headY = OW.y - oh * OW.s, place = (el, w, h) => { const x = clamp(OW.x - w / 2, 12, innerWidth - w - 12); let y = headY - h - 12; if (y < 12) y = Math.min(innerHeight - h - 12, OW.y + 12); el.style.translate = `${x.toFixed(1)}px ${y.toFixed(1)}px` };
+        place(bubble, bw, bh); if (!ask.hidden) place(ask, aw, ah);
+        if (owl3) owl3(dt, sdy);
+    }
+
+    /* ---------------- 3D owl: faces where it walks, dangles when carried, otherwise looks at the pointer; 2D images stay as fallback ---------------- */
+    let seenPointer = false; addEventListener('pointermove', e => { if (e.pointerType === 'mouse') seenPointer = true });
+    const owl3 = (() => {
+        if (!window.THREE || !THREE.GLTFLoader) return null;
+        const cv = document.createElement('canvas'); cv.className = 'owl3d'; cv.setAttribute('aria-hidden', 'true');
+        let r; try { r = new THREE.WebGLRenderer({ canvas: cv, alpha: true, antialias: true }) } catch (e) { return null }
+        owl.querySelector('.body').appendChild(cv); r.outputEncoding = THREE.sRGBEncoding;
+        const sc = new THREE.Scene(), cm = new THREE.PerspectiveCamera(26, 1, .1, 50); cm.position.set(0, .05, 4.6);
+        sc.add(new THREE.HemisphereLight(0xe4ecff, 0x0b1636, 1.15));
+        const key = new THREE.DirectionalLight(0xffffff, 1.1); key.position.set(-2, 3, 4); sc.add(key);
+        const rim = new THREE.DirectionalLight(0x5fd4ff, 1.6); rim.position.set(3, 1.5, -3); sc.add(rim);
+        const rig = new THREE.Group(); rig.rotation.order = 'YXZ'; sc.add(rig);
+        let ready = false, yaw = 0, pitch = 0, roll = 0;
+        new THREE.GLTFLoader().load('assets/coruja3D.glb', g => { rig.add(g.scene); ready = true; owl.classList.add('is3d') }, undefined, () => cv.remove());
+        function size() { const w = owl.offsetWidth, h = owl.offsetHeight; r.setPixelRatio(Math.min(2, devicePixelRatio || 1) * (innerWidth < 760 ? 1.2 : 1.7)); r.setSize(w, h, false); cm.aspect = w / h; cm.updateProjectionMatrix() }
+        addEventListener('resize', size); size();
+        return (dt, scrollDy) => {
+            if (!ready) return;
+            const cx = OW.x, cy = OW.y - oh * OW.s * .6, wob = Math.sin(OW.phase * Math.PI);
+            let yT, pT, rT, lift = 0;
+            if (OW.drag) { yT = 0; pT = .3; rT = clamp(-OW.vx * .0015, -.6, .6); OW.vx *= .9 }
+            else if (OW.walking) { yT = OW.dir * 1.1; pT = .06; rT = wob * .17; lift = Math.abs(wob) * .07 }
+            else {
+                if (fine && seenPointer) { yT = clamp(Math.atan2(px - cx, 480), -.95, .95); pT = clamp(Math.atan2(py - cy, 520), -.5, .55) }
+                else { yT = reduce ? 0 : Math.sin(time * .35) * .45; pT = reduce ? 0 : Math.sin(time * .23) * .08 }
+                pT += clamp(scrollDy * .012, -.2, .2); rT = -yaw * .09
+            }
+            const k = 1 - Math.exp(-dt * (OW.walking ? 9 : 7)); yaw += (yT - yaw) * k; pitch += (pT - pitch) * k; roll += (rT - roll) * (1 - Math.exp(-dt * 14));
+            rig.rotation.set(pitch, yaw, roll); rig.position.y = Math.sin(OW.hop * Math.PI) * .3 + lift;
+            r.render(sc, cm);
+        };
+    })();
 
     /* ---------------- particle targets ---------------- */
     const small = innerWidth < 760;
@@ -141,15 +290,15 @@
         geo = new THREE.BufferGeometry();
         geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(T[0]), 3)); geo.setAttribute('aColor', new THREE.BufferAttribute(new Float32Array(Cc[0]), 3));
         geo.setAttribute('aSize', new THREE.BufferAttribute(size, 1)); geo.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1));
-        const vs = `attribute vec3 aColor;attribute float aSize;attribute float aSeed;uniform float uTime,uPix,uAspect,uMove;uniform vec2 uMouse;varying vec3 vC;varying float vA;
+        const vs = `attribute vec3 aColor;attribute float aSize;attribute float aSeed;uniform float uTime,uPix,uAspect,uMove,uHi;uniform vec2 uMouse;varying vec3 vC;varying float vA;
     void main(){vec3 p=position;float t=uTime*.6+aSeed*40.;p+=vec3(sin(t),cos(t*.8),sin(t*.7))*.035;
       vec4 mv=modelViewMatrix*vec4(p,1.);vec4 cl=projectionMatrix*mv;vec2 ndc=cl.xy/cl.w;vec2 d=ndc-uMouse;d.x*=uAspect;float r=length(d);float f=smoothstep(.28,0.,r);
       vec2 push=normalize(d+1e-4)*f*.09;push.x/=uAspect;ndc+=push;cl.xy=ndc*cl.w;gl_Position=cl;
-      gl_PointSize=aSize*uPix*(17./-mv.z)*(1.+uMove*.6);vC=aColor;vA=1.+f*1.4;}`;
+      gl_PointSize=aSize*uPix*(17./-mv.z)*(1.+uMove*.6+uHi*.35);vC=aColor;vA=1.+f*1.4+uHi*.8;}`;
         const fs = `varying vec3 vC;varying float vA;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,0.,d);a=a*a*.6+a*.4;gl_FragColor=vec4(vC*vA*1.25,a);}`;
         const mk = () => new THREE.ShaderMaterial({
             transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, vertexShader: vs, fragmentShader: fs,
-            uniforms: { uTime: { value: 0 }, uPix: { value: DPR }, uMouse: { value: new THREE.Vector2(9, 9) }, uAspect: { value: 1 }, uMove: { value: 0 } }
+            uniforms: { uTime: { value: 0 }, uPix: { value: DPR }, uMouse: { value: new THREE.Vector2(9, 9) }, uAspect: { value: 1 }, uMove: { value: 0 }, uHi: { value: 0 } }
         });
         mat = mk(); points = new THREE.Points(geo, mat); pivot = new THREE.Group(); pivot.position.x = ox; points.position.x = -ox; pivot.add(points); scene3.add(pivot);
         const SN = small ? 700 : 1500, sp = new Float32Array(SN * 3), sc = new Float32Array(SN * 3), ss = new Float32Array(SN), sd = new Float32Array(SN);
@@ -211,7 +360,7 @@
     let tPrev = performance.now(), time = 0, vel = 0;
     // layout is measured once here, never inside the frame loop (reading it there forced a reflow every frame)
     let tops = [], hts = [], maxScroll = 0;
-    function measure() { tops = scenes.map(s => s.offsetTop); hts = scenes.map(s => s.offsetHeight); maxScroll = document.documentElement.scrollHeight - innerHeight }
+    function measure() { tops = scenes.map(s => s.offsetTop); hts = scenes.map(s => s.offsetHeight); maxScroll = document.documentElement.scrollHeight - innerHeight; measureOwl() }
     measure(); addEventListener('resize', measure); addEventListener('load', measure); if (document.fonts) document.fonts.ready.then(measure);
     if (window.ResizeObserver) new ResizeObserver(measure).observe(document.body);
     // continuous journey position (scene index + progress), eased toward the scroll so formations glide instead of stepping
@@ -223,12 +372,16 @@
         const a = Math.min(S - 1, Math.floor(gS)), p = clamp(gS - a); return { i: a, p, m: a < S - 1 ? sstep(.66, 1, p) : 0, q: clamp(p / .66) }
     }
     const bar = $('.counter i'); let lastA = -1, lastM = -1;
+    // text ↔ particles: the chapter legend lights up on arrival, and hovering a legend or highlighted word makes the formation glow
+    const legends = scenes.map(s => s.querySelector('.legend'));
+    let hover = 0, pulse = 0, glow = 0;
+    $$('.legend, mark.px').forEach(e => { e.addEventListener('pointerenter', () => hover = 1); e.addEventListener('pointerleave', () => hover = 0) });
     const lerp3 = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
     function frame(now) {
         if (lenis) lenis.raf(now);
         const dt = Math.min(.05, (now - tPrev) / 1000); tPrev = now; if (!reduce) time += dt;
         const st = sceneState(dt), a = st.i, b = Math.min(S - 1, a + 1), m = st.m;
-        if (a !== cur) { cur = a; bT.textContent = tips[a]; bK.textContent = String(a).padStart(2, '0') + ' · ' + scenes[a].dataset.name; $('#cNum').textContent = String(a).padStart(2, '0'); $('#cName').textContent = scenes[a].dataset.name; $$('#rail button').forEach((x, k) => x.setAttribute('aria-current', k === a)); if (scrollY > innerHeight * .5 && !small) say() }
+        if (a !== cur) { cur = a; legends.forEach((l, k) => l && l.classList.toggle('on', k === a)); if (!reduce) pulse = 1; $('#cNum').textContent = String(a).padStart(2, '0'); $('#cName').textContent = scenes[a].dataset.name; $$('#rail button').forEach((x, k) => x.setAttribute('aria-current', k === a)); onChapter(a) }
         bar.style.setProperty('--p', (maxScroll > 0 ? clamp(scrollY / maxScroll) : 0).toFixed(4));
         if (a === 2) { const k = Math.min(8, Math.floor(st.q * 9.4)); if (k !== activeNode) { activeNode = k; stepsLi.forEach((li, j) => li.classList.toggle('on', j <= k)); paintNodes(k) } }
         else if (a < 2 && activeNode !== -1) { activeNode = -1; stepsLi.forEach(li => li.classList.remove('on')); paintNodes(0) }
@@ -237,9 +390,7 @@
         // owl reacts to scroll direction and pointer side
         const dy = scrollY - lastScroll; lastScroll = scrollY; vel += (Math.abs(dy) - vel) * .15;
         if (Math.abs(dy) > 4) { setOwl(dy > 0 ? 'costas' : 'frente'); idle = 0 } else if ((idle += dt) > .4) setOwl(px < innerWidth * .33 ? 'esquerda' : px > innerWidth * .75 ? 'direita' : 'frente');
-        const intro = sstep(0, 1, clamp(scrollY / (innerHeight * .9))); const big = small ? 1.2 : 1.7;
-        owl.style.transform = `scale(${(big + (1 - big) * intro).toFixed(3)})`;
-        bubble.style.opacity = intro < .95 ? 0 : '';
+        owlStep(dt, dy);
         if (renderer) {
             const live = a === 3 || b === 3 || a === 7 || b === 7;
             if (a === 3 || b === 3) { const n = dyn(3, a === 3 ? st.q : 0, time); $('#back').textContent = a === 3 ? n : (a < 3 ? 0 : 31) }
@@ -260,6 +411,7 @@
             const spin = (a === 2 || a === 5) && !reduce; pivot.rotation.y = spin ? pivot.rotation.y + dt * .05 : pivot.rotation.y * .94;
             scene3.updateMatrixWorld();
             stars.rotation.y = time * .006;
+            pulse = Math.max(0, pulse - dt * .9); glow += (Math.max(hover, Math.sin(pulse * Math.PI) * .8) - glow) * (1 - Math.exp(-dt * 6)); mat.uniforms.uHi.value = glow;
             mat.uniforms.uTime.value = time; mat.uniforms.uMove.value = Math.min(1, vel / 40); stars.material.uniforms.uTime.value = time;
             mat.uniforms.uMouse.value.set(fine ? mx : 9, fine ? my : 9);
             renderer.render(scene3, camera);
